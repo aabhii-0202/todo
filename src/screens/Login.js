@@ -56,11 +56,12 @@ const Login = ({navigation}) => {
           );
       }
       return (
+          
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
               routes: [
-                { name: 'Home',params:{userId:user.UID} }
+                { name: 'Home',params:{user:user} }
               ],
             })
           )

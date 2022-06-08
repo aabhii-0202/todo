@@ -6,7 +6,6 @@ import RadioButtonRN from 'radio-buttons-react-native';
 const TodoList = ({todo,click}) => {
     const {title,body,time,checked} = todo;
     const data = [{label: ''}];
-
      return (
         <View style={{
             flexDirection:'row',

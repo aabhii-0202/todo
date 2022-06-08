@@ -1,25 +1,24 @@
 import React,{useState,useEffect} from 'react';
-import {View, Text,StyleSheet, TouchableOpacity } from 'react-native';
+import {View, Text,StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { CommonActions } from '@react-navigation/native';
 import TodoList from './components/TodoList';
+import EditTodo from './EditTodo';
 
 
-const Home = ({navigation,userId}) => {
+const Home = ({navigation,route}) => {
 
+    const {user} = route.params;
+    const [todoList,setTodoList]= useState([]);
+    const ref = firestore().collection(`Todo/User: ${user.uid}/List`);
 
-    const [todoList,setTodoList]= useState({});
+    
 
-    const todo = {
-        title: 'Gym',
-        body: 'Goto gym',
-        time: '12:30 PM',
-        checked: false
-    }
     useEffect(() => {
-        todos();
+        getAlldata();
     }, []);
+
     const logout = () => {
         auth()
         .signOut()
@@ -33,10 +32,18 @@ const Home = ({navigation,userId}) => {
         ));
     }
 
-    const todos = () => {
-        const ref = firestore().collection(`Databsase/${userId}/TodoList`);
+    const getAlldata = async () => {
+        await ref.onSnapshot((querySnapshot) => {
+            const list = [];
+            querySnapshot.forEach(doc=>{
+                const {temp} = doc.data();
+                list.push({temp})
+            })
+            setTodoList(list);
+        });
+          
     }
-
+    
      return (
         <View>
             <TouchableOpacity
@@ -47,11 +54,24 @@ const Home = ({navigation,userId}) => {
                 <Text>Logout</Text>
             </TouchableOpacity>
             <Text>Home Screen</Text>
-            <TodoList
-                todo={todo}
-                click={()=>console.log('Todo clicked')}
-                del={()=>console.log('delete clicked')}
-            />
+            <FlatList
+                data={todoList}
+                renderItem={({item})=>{
+                    return(
+                        <TodoList
+                            todo={item.temp}
+                            click={()=>navigation.navigate('EditTodo',{todo:item.temp,user:user})}
+                        />
+                    );
+                }}
+                />
+            <TouchableOpacity
+            onPress={()=>{
+                navigation.navigate('AddNew',{user:user});
+            }}
+            >
+                <Text>Add new</Text>
+            </TouchableOpacity>
         </View>
     );
 };
