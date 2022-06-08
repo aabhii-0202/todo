@@ -1,32 +1,32 @@
 import React from 'react';
 import {View, Text,StyleSheet,Image,TouchableOpacity } from 'react-native';
-import RadioButtonRN from 'radio-buttons-react-native';
 
 
-const TodoList = ({todo,click}) => {
-    const {title,body,time,checked} = todo;
-    const data = [{label: ''}];
-    console.log(title);
+const TodoList = ({todo,click,del}) => {
+    const {title,body,date} = todo;
      return (
         <View style={{
             flexDirection:'row',
+            marginHorizontal:16,
+            backgroundColor:'white',
+            borderRadius:8,
+            marginVertical:4
         }}>
         <TouchableOpacity 
         style={styles.container}
         onPress={click}>
             <Text style={styles.text}>{title}</Text>
-            <Text style={styles.date}>{time}</Text>
+            <Text style={styles.date}>{date}</Text>
         </TouchableOpacity>
-        <RadioButtonRN
-            style={{
-                alignSelf:'center',
-                marginBottom:10
-            }}
-            data={data}
-            selectedBtn={(e) => console.log(e)}
-            box={false}
-            circleSize={12}
-        />
+        <TouchableOpacity
+        style={styles.imgcont}
+        onPress={del}
+        >
+            <Image
+                style={styles.image}
+                source={require('../../../assets/delete.png')}
+                />
+        </TouchableOpacity>
         </View>
     );
 };
@@ -34,13 +34,9 @@ const TodoList = ({todo,click}) => {
 
 const styles = StyleSheet.create({
     container:{
-        flexDirection:'row',
         alignSelf:'stretch',
-        padding:16,
-        marginHorizontal:16,
-        width:'80%',
-        justifyContent:'space-between'
-
+        padding:8,
+        flex:5
     },
     image:{
         height:20,
@@ -50,15 +46,24 @@ const styles = StyleSheet.create({
     },
     text:{
         color:'black',
-        fontSize:16,
+        fontSize:24,
         alignSelf:'flex-start',
         marginLeft:16
     },
     date:{
         color:'black',
-        fontSize:16,
-        alignSelf:'flex-end',
-        marginLeft:16
+        fontSize:12,
+        alignSelf:'flex-start',
+        marginLeft:16,
+        marginTop:8
+    },
+    image:{
+        height:30,
+        width:30,
+    },
+    imgcont:{
+        alignSelf:'center',
+        flex:1
     }
 });
 

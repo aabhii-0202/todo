@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import {View, Text,StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import {StyleSheet, ScrollView, FlatList } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { CommonActions } from '@react-navigation/native';
@@ -11,7 +11,7 @@ const Home = ({navigation,route}) => {
 
     const {user} = route.params;
     const [todoList,setTodoList]= useState([]);
-    const ref = firestore().collection(`Todo/User: ${user.uid}/List`);
+    const ref = firestore().collection(`Todo/${user.email} ${user.uid}/List`);
 
     
 
@@ -52,15 +52,19 @@ const Home = ({navigation,route}) => {
             })
             setTodoList(list);
         });
-          
+    }
+
+    const deletetodo = (id) => {
+        const ref = firestore().collection(`Todo/${user.email} ${user.uid}/List`).doc(`${id}`);
+        ref.delete();
     }
     
      return (
-        <View>
+        <ScrollView style={styles.parent}>
             <Button
-                onPress={()=>{
-                logout();
-            }}>Log Out</Button>
+                 onPress={()=>{
+                    navigation.navigate('AddNew',{user:user});
+                }}>Add New</Button>
             <FlatList
                 data={todoList}
                 renderItem={({item})=>{
@@ -70,21 +74,27 @@ const Home = ({navigation,route}) => {
                             keyExtractor={(item) => item.id}
                             todo={item}
                             click={()=>navigation.navigate('EditTodo',{todo:item,user:user})}
+                            del={()=>{deletetodo(item.id)}}
                         />
                     );
                 }}
                 />
                 <Button
-                 onPress={()=>{
-                    navigation.navigate('AddNew',{user:user});
-                }}>Add New</Button>
-        </View>
+                onPress={()=>{
+                logout();
+            }}>Log Out</Button>
+        </ScrollView>
     );
 };
 
 
 const styles = StyleSheet.create({
-
+    parent:{
+        borderColor: 'green',
+        borderWidth:1,
+        borderRadius:8,
+        margin:16
+    }
 });
 
 

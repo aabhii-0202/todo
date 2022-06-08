@@ -24,7 +24,6 @@ const styles = {
     
   },
   buttonStyle: {
-    marginTop:48,
     backgroundColor: 'green',
     borderRadius: 4,
     marginLeft: 16,

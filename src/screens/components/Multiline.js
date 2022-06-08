@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text,StyleSheet , TextInput} from 'react-native';
 
 
-const LoginForm = ({ label, value, onChangeText, placeholder, secureTextEntry }) => {
+const Multiline = ({ label, value, onChangeText, placeholder, secureTextEntry }) => {
 
 
      return (
@@ -15,6 +15,7 @@ const LoginForm = ({ label, value, onChangeText, placeholder, secureTextEntry })
                 style={styles.inputStyle}
                 value={value}
                 onChangeText={onChangeText}
+                multiline
             />
         </View>
     );
@@ -35,16 +36,16 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         flex: 1,
         color:'black',
-        fontWeight:'600'
+        marginTop:8
       },
       containerStyle: {
-        height: 40,
         flex: 1,
         flexDirection: 'row',
-        alignItems: 'center',
-        marginHorizontal:16
+        alignItems: 'flex-start',
+        marginHorizontal:16,
+        height:400
       }
 });
 
 
-export default LoginForm;
+export default Multiline;

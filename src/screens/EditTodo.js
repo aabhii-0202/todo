@@ -6,6 +6,7 @@ import CardSection from './components/CardSection';
 import Button from './components/Button';
 import LoginForm from './components/LoginForm';
 import moment from 'moment';
+import Multiline from './components/Multiline';
 
 
 const EditTodo = ({navigation,route}) => {
@@ -13,7 +14,7 @@ const EditTodo = ({navigation,route}) => {
     const {todo,user} = route.params;
     const [title,setitle] = useState(todo.title);
     const [body,setbody] = useState(todo.body);
-    const ref = firestore().collection(`Todo/User: ${user.uid}/List`).doc(`${todo.id}`);
+    const ref = firestore().collection(`Todo/${user.email} ${user.uid}/List`).doc(`${todo.id}`);
 
     const addnew = async () => {
 
@@ -29,21 +30,8 @@ const EditTodo = ({navigation,route}) => {
         .catch((err)=>{console.log(err)})    
     }
 
-    const del = () => {
-        ref.delete();
-        navigation.pop();
-    }
-
     return (
         <Card>
-            <View>
-                <Button
-                onPress={()=>{del()}}
-                >
-                    Delete
-                </Button>
-
-            </View>
             <CardSection>
                 <LoginForm
                     label='Title' 
@@ -54,7 +42,7 @@ const EditTodo = ({navigation,route}) => {
                     />
             </CardSection>
             <CardSection>
-                <LoginForm
+                <Multiline
                     label='Body' 
                     value={body} 
                     onChangeText={(text)=>{setbody(text)}}

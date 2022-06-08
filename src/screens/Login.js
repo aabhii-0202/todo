@@ -10,8 +10,9 @@ import { CommonActions } from '@react-navigation/native';
 const Login = ({navigation}) => {
     const [initializing, setInitializing] = useState(true);
     const [user, setUser] = useState();
-    const [password,setpassword] = useState('password');
-    const [mail,setmail] = useState('test1@test.com');
+    const [password,setpassword] = useState('');
+    const [mail,setmail] = useState('');
+    const [error,seterror] = useState(null);
 
 
     const check = () =>{
@@ -49,6 +50,7 @@ const Login = ({navigation}) => {
                 secureTextEntry={true}
               />
               </CardSection>
+              {error?<Text style={styles.error}>{error}</Text>:null}
               <Button
                 onPress={()=>{signin()}}
               >LogIn</Button> 
@@ -69,32 +71,23 @@ const Login = ({navigation}) => {
     }
 
     const signin = () => {
+      if(mail.length>0&&password.length>0){
       auth()
       .signInWithEmailAndPassword(mail, password)
-      .then(() => {
-        console.log('User account created & signed in!');
-      })
+      .then(() => {seterror(null)})
       .catch(error => {
           auth().createUserWithEmailAndPassword(mail, password)
-          .then(() =>{
-            console.log('User account  signed in!');
-          }).catch(error => {
+          .then(() =>{seterror(null)}).catch(error => {
             if (error.code === 'auth/invalid-email') {
-              console.log('That email address is invalid!');
-            }
+              seterror('That email address is invalid!');
+            }else seterror(error);
           })
-        
 
-        
-
-        console.error(error);
       });
     }
-
-    const signout = () => {
-      auth()
-      .signOut()
-      .then(() => console.log('User signed out!'));
+    else{
+      seterror('Invalid Email or Password');
+    }
     }
     return (
       <View>
@@ -105,7 +98,12 @@ const Login = ({navigation}) => {
 
 
 const styles = StyleSheet.create({
-
+  error:{
+    color:'red',
+    fontSize:16,
+    alignSelf:'center',
+    margin:8
+  }
 });
 
 

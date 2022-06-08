@@ -6,14 +6,15 @@ import CardSection from './components/CardSection';
 import Button from './components/Button';
 import LoginForm from './components/LoginForm';
 import moment from 'moment';
+import Multiline from './components/Multiline';
 
 
 const AddNew = ({navigation,route}) => {
 
-    const [title,setitle] = useState('Title');
-    const [body,setbody] = useState('Body');
+    const [title,setitle] = useState('');
+    const [body,setbody] = useState('');
     const {user} = route.params;
-    const ref = firestore().collection(`Todo/User: ${user.uid}/List`);
+    const ref = firestore().collection(`Todo/${user.email} ${user.uid}/List`);
 
     const addnew = async () => {
 
@@ -41,7 +42,7 @@ const AddNew = ({navigation,route}) => {
                     />
             </CardSection>
             <CardSection>
-                <LoginForm
+                <Multiline
                     label='Body' 
                     value={body} 
                     onChangeText={(text)=>{setbody(text)}}
