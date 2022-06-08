@@ -24,6 +24,7 @@ const AddNew = ({navigation,route}) => {
             checked:false
         })
         .then(()=>{
+            
             navigation.pop();
         })
         .catch((err)=>{console.log(err)})    
