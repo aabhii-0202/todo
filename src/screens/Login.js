@@ -5,12 +5,13 @@ import Button from './components/Button';
 import LoginForm from './components/LoginForm';
 import Card from './components/Card';
 import CardSection from './components/CardSection';
+import { CommonActions } from '@react-navigation/native';
 
 const Login = ({navigation}) => {
     const [initializing, setInitializing] = useState(true);
     const [user, setUser] = useState();
-    const [password,setpassword] = useState();
-    const [mail,setmail] = useState();
+    const [password,setpassword] = useState('password');
+    const [mail,setmail] = useState('test1@test.com');
 
 
     const check = () =>{
@@ -51,17 +52,18 @@ const Login = ({navigation}) => {
               <Button
                 onPress={()=>{signin()}}
               >LogIn</Button> 
-              
-              
             </Card>
           );
       }
       return (
-          <View>
-            <Button
-              onPress={()=>{signout()}}
-            >LogOut</Button>
-          </View>
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [
+                { name: 'Home',params:{userId:user.UID} }
+              ],
+            })
+          )
       );
     }
 
