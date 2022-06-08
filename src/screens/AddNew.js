@@ -12,28 +12,20 @@ const AddNew = ({navigation,route}) => {
 
     const [title,setitle] = useState('Title');
     const [body,setbody] = useState('Body');
-    const [date,setdate]= useState();
     const {user} = route.params;
     const ref = firestore().collection(`Todo/User: ${user.uid}/List`);
-    useEffect(() => {
-        let d = moment().utcOffset('+05:30').format('YYYY-MM-DD hh:mm:ss a');
-        setdate(d);
-    }, []);
-    
 
     const addnew = async () => {
 
-        const temp = {
+        await ref.add({
             title,
             body,
-            date,
+            date:moment().utcOffset('+05:30').format('YYYY-MM-DD hh:mm:ss a'),
             checked:false
-        }
-
-
-
-        await ref.add({temp})
-        .then(()=>{console.log('Done')})
+        })
+        .then(()=>{
+            navigation.pop();
+        })
         .catch((err)=>{console.log(err)})    
     }
     return (

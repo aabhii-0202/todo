@@ -4,7 +4,7 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { CommonActions } from '@react-navigation/native';
 import TodoList from './components/TodoList';
-import EditTodo from './EditTodo';
+import Button from './components/Button';
 
 
 const Home = ({navigation,route}) => {
@@ -36,8 +36,19 @@ const Home = ({navigation,route}) => {
         await ref.onSnapshot((querySnapshot) => {
             const list = [];
             querySnapshot.forEach(doc=>{
-                const {temp} = doc.data();
-                list.push({temp})
+                const {
+                    title,
+                    body,
+                    date,
+                    checked
+                } = doc.data();
+                list.push({
+                    id: doc.id,
+                    title,
+                    body,
+                    date,
+                    checked
+                })
             })
             setTodoList(list);
         });
@@ -46,32 +57,27 @@ const Home = ({navigation,route}) => {
     
      return (
         <View>
-            <TouchableOpacity
-            onPress={()=>{
+            <Button
+                onPress={()=>{
                 logout();
-            }}
-            >
-                <Text>Logout</Text>
-            </TouchableOpacity>
-            <Text>Home Screen</Text>
+            }}>Log Out</Button>
             <FlatList
                 data={todoList}
                 renderItem={({item})=>{
+                    // console.log(item);
                     return(
                         <TodoList
-                            todo={item.temp}
-                            click={()=>navigation.navigate('EditTodo',{todo:item.temp,user:user})}
+                            keyExtractor={(item) => item.id}
+                            todo={item}
+                            click={()=>navigation.navigate('EditTodo',{todo:item,user:user})}
                         />
                     );
                 }}
                 />
-            <TouchableOpacity
-            onPress={()=>{
-                navigation.navigate('AddNew',{user:user});
-            }}
-            >
-                <Text>Add new</Text>
-            </TouchableOpacity>
+                <Button
+                 onPress={()=>{
+                    navigation.navigate('AddNew',{user:user});
+                }}>Add New</Button>
         </View>
     );
 };

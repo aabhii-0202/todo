@@ -13,32 +13,37 @@ const EditTodo = ({navigation,route}) => {
     const {todo,user} = route.params;
     const [title,setitle] = useState(todo.title);
     const [body,setbody] = useState(todo.body);
-    const [time,setdate]= useState();
-    
-    const ref = firestore().collection(`Todo/User: ${user.uid}/List`);
-    useEffect(() => {
-        let d = moment().utcOffset('+05:30').format('YYYY-MM-DD hh:mm:ss a');
-        setdate(d);
-    }, []);
-    
+    const ref = firestore().collection(`Todo/User: ${user.uid}/List`).doc(`${todo.id}`);
 
     const addnew = async () => {
 
-        const temp = {
+        await ref.update({
             title,
             body,
-            date,
+            date:moment().utcOffset('+05:30').format('YYYY-MM-DD hh:mm:ss a'),
             checked:false
-        }
+        })
+        .then(()=>{
 
-
-
-        await ref.add({temp})
-        .then(()=>{console.log('Done')})
+        })
         .catch((err)=>{console.log(err)})    
     }
+
+    const del = () => {
+        ref.delete();
+        navigation.pop();
+    }
+
     return (
         <Card>
+            <View>
+                <Button
+                onPress={()=>{del()}}
+                >
+                    Delete
+                </Button>
+
+            </View>
             <CardSection>
                 <LoginForm
                     label='Title' 
